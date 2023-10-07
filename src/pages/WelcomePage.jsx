@@ -2,6 +2,7 @@ import React from "react";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "../components/Header";
 import { Link } from "react-router-dom";
+import Button from "../components/Button";
 const WelcomePage = () => {
   return (
     <>
@@ -9,26 +10,23 @@ const WelcomePage = () => {
         <Header />
       </div>
       <div className="container mt-16 flex flex-col items-center justify-center bg-[url(/assets/images/houses.svg)] bg-cover">
-        <h1 className="pt-10 font-bold text-6xl text-center mx-72">
-          Accounting made simple for{" "}
-          <span className="text-blue-500">small businesses</span>.
+        <h1 className="pt-10 font-bold text-6xl text-center mx-48">
+          Welcome to Twin Appartments home{" "}
+          <span className="text-blue-500">monitoring system</span>.
         </h1>
 
-        <p className="pt-10 text-xl text-center mx-96">
-          Most bookkeeping software is accurate, but hard to use. We make the ,
-          don’t get audited.
+        <p className="pt-10 text-xl text-center mx-80">
+          Easiest way to monitor your daily and monthly bills,records and daily
+          activities. Know your expenditure at Twins appartments for decision
+          making
         </p>
 
         <div className="flex gap-7">
-          <Link to={"/"} className="mt-10">
-            <button className=" py-1 px-4 rounded-3xl bg-blue-500 text-white font-semibold cursor-pointer hover:bg-blue-400">
-              About
-            </button>
+          <Link to={""} className="mt-10">
+            <Button btntext={"About"} />
           </Link>
           <Link to={"/"} className="mt-10">
-            <button className=" py-1 px-4 rounded-3xl bg-blue-500 text-white font-semibold cursor-pointer hover:bg-blue-400">
-              Contact us
-            </button>
+            <Button btntext={"Contact us"} />
           </Link>
         </div>
       </div>
