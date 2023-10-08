@@ -15,6 +15,7 @@ import { MdOutlineWaterDrop } from "react-icons/md";
 import { BiSolidLock } from "react-icons/bi";
 import { HiUserCircle } from "react-icons/hi";
 import { Link, Outlet } from "react-router-dom";
+import "./darshboard.css";
 
 const Dashboard = () => {
   return (
@@ -67,11 +68,13 @@ const Dashboard = () => {
 
       <div className=" bg-slate-100 col-span-8 p-8">
         <p class="text-slate-300 font-semibold mb-6">Dashboard</p>
-        <Outlet />
+        <div className="overflow-y-auto scrollbar-hide">
+          <Outlet />
+        </div>
         <br />
       </div>
 
-      <div className=" bg-blue-100 col-span-3 p-8 flex flex-col gap-7 border-slate-300">
+      <div className=" bg-blue-100 col-span-3 p-8 flex flex-col gap-7 border-slate-300 overflow-y-auto scrollbar-hide">
         <div className="flex justify-between items-center">
           <div className="relative">
             <IoMdNotifications size={26} className="text-slate-600" />

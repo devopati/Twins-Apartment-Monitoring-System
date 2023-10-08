@@ -8,17 +8,17 @@ const WaterConsumptionGraph = () => {
         id: "apexchart-example",
       },
       xaxis: {
-        categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
+        categories: ["Nov", "Dec", "Jan", "Feb", "Mar", "Apr"],
       },
     },
     series: [
       {
         name: "Consumed",
-        data: [30, 40, 35, 50, 49, 60, 40, 91, 125],
+        data: [300, 415, 357, 510, 429, 630],
       },
       {
         name: "Collected from rain",
-        data: [10, 10, 15, 15, 19, 30, 70, 51, 75],
+        data: [100, 120, 155, 265, 78, 170],
       },
     ],
   });
