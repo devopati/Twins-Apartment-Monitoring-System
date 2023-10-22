@@ -4,8 +4,9 @@ import LoadingSpinner from "./LoadingSpinner";
 import Draggable from "react-draggable";
 
 const ViewDeviceComponent = ({ visible, onClosePress, currentDevice }) => {
+  const initialPosition = { x: 100, y: 10 };
   return (
-    <Draggable>
+    <Draggable position={initialPosition}>
       <div
         className={`bg-slate-100 py-3 px-4 w-full shadow-2xl rounded flex flex-col gap-4 pb-6 h-full  ${
           visible ? "visible" : "invisible"

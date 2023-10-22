@@ -12,7 +12,7 @@ const WelcomePage = () => {
       <div className="container mt-16 flex flex-col items-center justify-center bg-[url(/assets/images/houses.svg)] bg-cover">
         <h1 className="pt-10 font-bold text-6xl text-center mx-48">
           Welcome to Twin Appartments home{" "}
-          <span className="text-blue-500">monitoring system</span>.
+          <span className="text-blue-500">electronic devices</span>.
         </h1>
 
         <p className="pt-10 text-xl text-center mx-80">
