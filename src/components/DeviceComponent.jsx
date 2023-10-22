@@ -1,7 +1,13 @@
 import React from "react";
 import { AiFillEye, AiOutlineWifi, AiTwotoneDelete } from "react-icons/ai";
 
-const DeviceComponent = ({ Icon, name, text, onDeviceClick }) => {
+const DeviceComponent = ({
+  Icon,
+  name,
+  text,
+  onDeviceClick,
+  onViewDeviceClick,
+}) => {
   return (
     <div
       className="flex border-slate-400 border-b-2 justify-between items-center"
@@ -23,7 +29,10 @@ const DeviceComponent = ({ Icon, name, text, onDeviceClick }) => {
       </div>
 
       <div className="flex gap-4">
-        <div className="rounded-full bg-green-600 h-7 w-7 flex items-center justify-center cursor-pointer">
+        <div
+          className="rounded-full bg-green-600 h-7 w-7 flex items-center justify-center cursor-pointer"
+          onClick={onViewDeviceClick}
+        >
           <AiFillEye className="text-slate-100" size={24} />
         </div>
         {/* 

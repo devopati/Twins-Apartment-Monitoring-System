@@ -8,7 +8,7 @@ import {
   GetAllDevices,
   setIsAdded,
 } from "../redux/slices/DeviceSlice";
-import { useNavigate } from "react-router-dom";
+import Draggable from "react-draggable";
 
 const NewDeviceSpecs = ({
   visible,
@@ -108,59 +108,61 @@ const NewDeviceSpecs = ({
     }
   }, [dispatch, isAdded, isLoading]);
   return (
-    <div
-      className={`bg-slate-100 py-3 px-4 w-full shadow-xl rounded flex flex-col gap-4 pb-6 h-full ${
-        visible ? "visible" : "invisible"
-      }`}
-    >
+    <Draggable>
       <div
-        className="flex justify-end cursor-pointer hover:rounded-full hover:bg-red-300 p-2 self-end transition-all"
-        onClick={onClosePress}
+        className={`bg-slate-100 py-3 px-4 w-full shadow-xl rounded flex flex-col gap-4 pb-6 h-full ${
+          visible ? "visible" : "invisible"
+        }`}
       >
-        <AiOutlineClose size={24} className="flex text-red-700" />
+        <div
+          className="flex justify-end cursor-pointer hover:rounded-full hover:bg-red-300 p-2 self-end transition-all"
+          onClick={onClosePress}
+        >
+          <AiOutlineClose size={24} className="flex text-red-700" />
+        </div>
+
+        <h1 className="text-slate-600 font-bold text-xl px-12">
+          Fill the fields to add {identifierName}
+        </h1>
+
+        <div className="rounded-full bg-slate-700 h-16 w-16 flex items-center justify-center self-center">
+          {Icon && <Icon className="text-slate-100" size={40} />}
+        </div>
+
+        <div className="flex flex-col gap-5">
+          <InputField
+            label={"Enter unique name:"}
+            onChangeHandler={handleInputChange}
+            value={deviceData.uniqueName}
+            name={"uniqueName"}
+            fieldErr={field1Err}
+          />
+
+          <InputField
+            label={"Consumption capacity(W):"}
+            type={"number"}
+            onChangeHandler={handleInputChange}
+            value={deviceData.consumptionCapacity}
+            name={"consumptionCapacity"}
+            fieldErr={field2Err}
+          />
+
+          <InputField
+            label={"Serial number:"}
+            onChangeHandler={handleInputChange}
+            value={deviceData.serialNo}
+            name={"serialNo"}
+            fieldErr={field3Err}
+          />
+
+          <CustomButton
+            btnTitle={"Add device"}
+            onButtonPress={onSubmitHandler}
+            isLoading={isLoading}
+          />
+        </div>
       </div>
-
-      <h1 className="text-slate-600 font-bold text-xl px-12">
-        Fill the fields to add {identifierName}
-      </h1>
-
-      <div className="rounded-full bg-slate-700 h-16 w-16 flex items-center justify-center self-center">
-        {Icon && <Icon className="text-slate-100" size={40} />}
-      </div>
-
-      <div className="flex flex-col gap-5">
-        <InputField
-          label={"Enter unique name:"}
-          onChangeHandler={handleInputChange}
-          value={deviceData.uniqueName}
-          name={"uniqueName"}
-          fieldErr={field1Err}
-        />
-
-        <InputField
-          label={"Consumption capacity(W):"}
-          type={"number"}
-          onChangeHandler={handleInputChange}
-          value={deviceData.consumptionCapacity}
-          name={"consumptionCapacity"}
-          fieldErr={field2Err}
-        />
-
-        <InputField
-          label={"Serial number:"}
-          onChangeHandler={handleInputChange}
-          value={deviceData.serialNo}
-          name={"serialNo"}
-          fieldErr={field3Err}
-        />
-
-        <CustomButton
-          btnTitle={"Add device"}
-          onButtonPress={onSubmitHandler}
-          isLoading={isLoading}
-        />
-      </div>
-    </div>
+    </Draggable>
   );
 };
 

@@ -25,6 +25,7 @@ import { DevicesToAdd } from "../Data/DevicesToAdd";
 import { GetAllDevices } from "../redux/slices/DeviceSlice";
 import { GetSpecificIcon } from "../utils/GetSpecificIcon";
 import NoDevices from "../components/NoDevices";
+import ViewDeviceComponent from "../components/ViewDeviceComponent";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -33,7 +34,9 @@ const Dashboard = () => {
 
   const [addDeviceVisible, setAddDeviceVisible] = useState(false);
   const [newDeviceVisible, setNewDeviceVisible] = useState(false);
+  const [viewDeviceActive, setViewDeviceActive] = useState(false);
   const [deviceIdentifier, setDeviceIdentifier] = useState({});
+  const [currentDevice, setCurrentDevice] = useState({});
 
   const { isLoading, devices } = useSelector((state) => state.device);
 
@@ -128,6 +131,18 @@ const Dashboard = () => {
             />
           </div>
 
+          <div
+            className={`absolute w-max left-1/4 top-1/4 transform -translate-x-1/4 -translate-y-1/4 ${
+              viewDeviceActive ? " z-50" : "z-0"
+            }`}
+          >
+            <ViewDeviceComponent
+              visible={viewDeviceActive}
+              onClosePress={() => setViewDeviceActive(false)}
+              currentDevice={currentDevice}
+            />
+          </div>
+
           <Outlet />
         </div>
       </div>
@@ -198,6 +213,10 @@ const Dashboard = () => {
                   <DeviceComponent
                     name={item?.uniqueName}
                     Icon={GetSpecificIcon(item?.identifier?.name)[0]?.icon}
+                    onViewDeviceClick={() => {
+                      setCurrentDevice(item);
+                      setViewDeviceActive(true);
+                    }}
                   />
                 </div>
               );
