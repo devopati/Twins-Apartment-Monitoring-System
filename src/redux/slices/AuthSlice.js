@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 const initialState = {
   isLoggedIn: false,
   isLoading: false,
-  profileData: {},
+  profileData: {} || localStorage.getItem("user"),
   token: "",
   errMessage: "",
   successMsg: "",
@@ -87,6 +87,7 @@ const AuthSlice = createSlice({
         state.isLoggedIn = true;
         state.profileData = action.payload.data?.user;
         state.token = action.payload.data?.token;
+        localStorage.setItem("user", JSON.stringify(action.payload.data?.user));
       })
 
       .addCase(RegisterUser.rejected, (state, action) => {
@@ -107,6 +108,7 @@ const AuthSlice = createSlice({
         state.isLoggedIn = true;
         state.profileData = action.payload.data?.user;
         state.token = action.payload.data?.token;
+        localStorage.setItem("user", JSON.stringify(action.payload.data?.user));
       })
 
       .addCase(LoginUser.rejected, (state, action) => {

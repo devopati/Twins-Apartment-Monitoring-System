@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import logo from "../assets/images/logo.svg";
 import { VscGraph } from "react-icons/vsc";
 import { PiNotepadFill } from "react-icons/pi";
@@ -16,12 +16,41 @@ import { BiSolidLock } from "react-icons/bi";
 import { HiUserCircle } from "react-icons/hi";
 import { Link, Outlet } from "react-router-dom";
 import "./darshboard.css";
+import AddDevicePopup from "../components/AddDevicePopup";
+import DeviceComponent from "../components/DeviceComponent";
+import NewDeviceSpecs from "../components/NewDeviceSpecs";
+import LoadingSpinner from "../components/LoadingSpinner";
+import { useDispatch, useSelector } from "react-redux";
+import { DevicesToAdd } from "../Data/DevicesToAdd";
+import { GetAllDevices } from "../redux/slices/DeviceSlice";
+import { GetSpecificIcon } from "../utils/GetSpecificIcon";
+import NoDevices from "../components/NoDevices";
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
+
+  const profileData = JSON.parse(localStorage.getItem("user"));
+
+  const [addDeviceVisible, setAddDeviceVisible] = useState(false);
+  const [newDeviceVisible, setNewDeviceVisible] = useState(false);
+  const [deviceIdentifier, setDeviceIdentifier] = useState({});
+
+  const { isLoading, devices } = useSelector((state) => state.device);
+
+  useEffect(() => {
+    (async () => {
+      await dispatch(GetAllDevices(profileData?._id));
+    })();
+  }, []);
+
   return (
-    <div className="grid grid-cols-12 gap-0 divide-x-2 ">
-      <div className=" bg-blue-500 text-slate-100   px-5 flex justify-center">
-        <div className="flex flex-col gap-4 items-center">
+    <div
+      className={`grid grid-cols-12 gap-0 divide-x-2 h-screen transition-all`}
+    >
+      <div
+        className={` bg-blue-500 text-slate-100   px-5 flex justify-center `}
+      >
+        <div className="flex flex-col gap-4 items-center fixed ">
           <div className="h-16 w-16 p-1 rounded-full ring-slate-100 ring-2 mt-5 bg-blue-400 flex items-center justify-center">
             <img src={logo} alt="" className="h-7 w10" />
           </div>
@@ -66,15 +95,46 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className=" bg-slate-100 col-span-8 p-8">
+      <div className={` bg-slate-100 col-span-8 p-8  `}>
         <p class="text-slate-300 font-semibold mb-6">Dashboard</p>
-        <div className="overflow-y-auto scrollbar-hide">
+
+        <div>
+          <div
+            className={`absolute w-max left-1/4 top-1/4 transform -translate-x-1/4 -translate-y-1/4 ${
+              addDeviceVisible ? " z-50" : "z-0"
+            }`}
+          >
+            <AddDevicePopup
+              visible={addDeviceVisible}
+              onClosePress={() => setAddDeviceVisible(false)}
+              setDeviceIdentifier={setDeviceIdentifier}
+              setNewDeviceVisible={setNewDeviceVisible}
+            />
+          </div>
+
+          <div
+            className={`absolute w-max left-2/3 top-1/4 transform -translate-x-2/3 -translate-y-1/4 ${
+              newDeviceVisible ? " z-50" : "z-0"
+            }`}
+          >
+            <NewDeviceSpecs
+              visible={newDeviceVisible}
+              Icon={deviceIdentifier?.icon}
+              identifierName={deviceIdentifier?.name}
+              identifier={deviceIdentifier}
+              onClosePress={() => setNewDeviceVisible(false)}
+              setNewDeviceVisible={setNewDeviceVisible}
+              setAddDeviceVisible={setAddDeviceVisible}
+            />
+          </div>
+
           <Outlet />
         </div>
-        <br />
       </div>
 
-      <div className=" bg-blue-100 col-span-3 p-8 flex flex-col gap-7 border-slate-300 overflow-y-auto scrollbar-hide">
+      <div
+        className={` bg-blue-100 col-span-3 p-8 flex flex-col gap-7 border-slate-300 overflow-y-auto `}
+      >
         <div className="flex justify-between items-center">
           <div className="relative">
             <IoMdNotifications size={26} className="text-slate-600" />
@@ -116,70 +176,44 @@ const Dashboard = () => {
         </div>
 
         <div className="flex flex-col gap-6 mt-4">
-          <small className="text-lg font-semibold text-left">
-            Quick access
-          </small>
-
-          <div className="flex gap-5 items-center border-slate-400 border-b-2 pb-4">
-            <div className="rounded-full bg-slate-700 h-14 w-14 flex items-center justify-center">
-              <BiSolidLock className="text-slate-100" size={32} />
-            </div>
-            <div className="flex flex-col gap-0 items-start">
-              <small className="font-semibold text-base">Security</small>
-              <small>Partial lock</small>
-            </div>
-          </div>
-
-          <div className="flex gap-5 items-center border-slate-400 border-b-2 pb-4">
-            <div className="rounded-full bg-slate-700 h-14 w-14 flex items-center justify-center">
-              <IoMdBulb className="text-slate-100" size={32} />
-            </div>
-            <div className="flex flex-col gap-0 items-start">
-              <small className="font-semibold text-base">Lights</small>
-              <div className="flex gap-8">
-                <div className="flex flex-col items-center">
-                  <small className="text-slate-700 font-bold text-2xl">3</small>
-                  <small className="font-semibold text-xs">ON</small>
-                </div>
-                <div className="flex flex-col items-center">
-                  <small className="text-slate-700 font-bold text-2xl">
-                    10
-                  </small>
-                  <small className="font-semibold text-xs">OFF</small>
-                </div>
-              </div>
+          <div className="flex justify-between items-center">
+            <small className="text-lg font-semibold text-left">
+              My devices
+            </small>
+            <div
+              className="rounded-full bg-blue-500 h-6 w-6 flex items-center justify-center cursor-pointer"
+              onClick={() => {
+                window.scrollTo(0, 0);
+                setAddDeviceVisible(true);
+              }}
+            >
+              <IoMdAdd className="text-slate-100" size={24} />
             </div>
           </div>
-
-          <div className="flex gap-5 items-center border-slate-400 border-b-2 pb-4">
-            <div className="rounded-full bg-slate-700 h-14 w-14 flex items-center justify-center">
-              <AiOutlineWifi className="text-slate-100" size={32} />
-            </div>
-            <div className="flex flex-col gap-0 items-start">
-              <small className="font-semibold text-base">WIFI</small>
-              <div className="flex gap-8">
-                <div className="flex flex-col items-center">
-                  <small className="text-slate-700 font-bold text-2xl">8</small>
-                  <small className="font-semibold text-xs">Devices</small>
+          {devices.length > 0 &&
+            !isLoading &&
+            devices.map((item) => {
+              return (
+                <div key={item?._id}>
+                  <DeviceComponent
+                    name={item?.uniqueName}
+                    Icon={GetSpecificIcon(item?.identifier?.name)[0]?.icon}
+                  />
                 </div>
-              </div>
-            </div>
-          </div>
+              );
+            })}
+          {isLoading && <LoadingSpinner />}
 
-          <div className="flex gap-5 items-center border-slate-400 border-b-2 pb-4">
-            <div className="rounded-full bg-slate-700 h-14 w-14 flex items-center justify-center">
-              <IoMdAdd className="text-slate-100" size={32} />
-            </div>
-            <div className="flex flex-col gap-0 items-start">
-              <small className="font-semibold text-base">Add</small>
-              <div className="flex gap-8">
-                <div className="flex flex-col items-center">
-                  {/* <small className="text-slate-700 font-bold text-2xl">8</small>
-                  <small className="font-semibold text-xs">Devices</small> */}
-                </div>
-              </div>
-            </div>
-          </div>
+          {devices.length < 1 && !isLoading && (
+            <NoDevices
+              onAddPress={() => setAddDeviceVisible(true)}
+              onReloadPress={() =>
+                (async () => {
+                  await dispatch(GetAllDevices(profileData?._id));
+                })()
+              }
+            />
+          )}
         </div>
       </div>
     </div>
