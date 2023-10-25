@@ -12,6 +12,8 @@ const initialState = {
   successMsg: "",
   removingDevice: false,
   deviceRemoved: false,
+  updatingDevice: false,
+  deviceUpdated: false,
 };
 
 export const AddNewDevice = createAsyncThunk(
@@ -122,6 +124,35 @@ export const RemoveDevice = createAsyncThunk(
   }
 );
 
+export const UpdateDevice = createAsyncThunk(
+  "device/update-device",
+  async (data, thunkAPI) => {
+    const { deviceId, device } = data;
+    try {
+      const response = await axios.patch(
+        `${BACKENDURL}/device/update/${deviceId}`,
+        device
+      );
+
+      return response;
+    } catch (error) {
+      console.log(error);
+      let errMsg;
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        errMsg = error.response.data.message;
+      } else {
+        // If no custom message, use a generic error message
+        errMsg = "An error occurred while getting your devices";
+      }
+      return thunkAPI.rejectWithValue(errMsg);
+    }
+  }
+);
+
 const DeviceSlice = createSlice({
   name: "device",
   initialState,
@@ -131,6 +162,9 @@ const DeviceSlice = createSlice({
     },
     setDeviceRemoved: (state, action) => {
       state.deviceRemoved = action.payload;
+    },
+    setDeviceUpdated: (state, action) => {
+      state.deviceUpdated = action.payload;
     },
   },
 
@@ -201,10 +235,28 @@ const DeviceSlice = createSlice({
         state.removingDevice = false;
         toast.error(action.payload);
         state.errMessage = action.payload;
+      })
+
+      // Update device
+      .addCase(UpdateDevice.pending, (state) => {
+        state.updatingDevice = true;
+      })
+
+      .addCase(UpdateDevice.fulfilled, (state, action) => {
+        state.updatingDevice = false;
+        state.deviceUpdated = true;
+        toast.success(action.payload.data?.message);
+      })
+
+      .addCase(UpdateDevice.rejected, (state, action) => {
+        state.updatingDevice = false;
+        toast.error(action.payload);
+        state.errMessage = action.payload;
       });
   },
 });
 
-export const { setIsAdded, setDeviceRemoved } = DeviceSlice.actions;
+export const { setIsAdded, setDeviceRemoved, setDeviceUpdated } =
+  DeviceSlice.actions;
 
 export default DeviceSlice.reducer;

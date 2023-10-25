@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import DashContainer from "../components/DashContainer";
 import EnergyConsumptionGraph from "../components/EnergyConsumptionGraph";
 import { TbDevices } from "react-icons/tb";
@@ -6,14 +6,27 @@ import { RiTokenSwapFill } from "react-icons/ri";
 import { FiPower } from "react-icons/fi";
 import Table from "../components/Table";
 import { useSelector } from "react-redux";
+import EditDeviceComponent from "../components/EditDeviceComponent";
 
 const Consumption = () => {
   const { isLoading, devices } = useSelector((state) => state.device);
 
-  let tokensConsumed = 0;
-
+  const [editDeviceActive, setEditdeviceActive] = useState(false);
+  const [deviceToEdit, setDeviceToEdit] = useState({});
   return (
     <div className="overflow-y-auto scrollbar-hide h-max">
+      <div
+        className={`absolute w-max left-1/4 top-1/4 transform -translate-x-1/4 -translate-y-1/4 ${
+          editDeviceActive ? " z-50" : "z-0"
+        }`}
+      >
+        <EditDeviceComponent
+          visible={editDeviceActive}
+          onClosePress={() => setEditdeviceActive(false)}
+          device={deviceToEdit}
+          setEditdeviceActive={setEditdeviceActive}
+        />
+      </div>
       <div className="flex justify-between">
         <DashContainer
           background={"bg-blue-400"}
@@ -51,7 +64,10 @@ const Consumption = () => {
           Added devices
         </small>
         <div className="mt-6">
-          <Table />
+          <Table
+            setDeviceToEdit={setDeviceToEdit}
+            setEditdeviceActive={setEditdeviceActive}
+          />
         </div>
       </div>
 

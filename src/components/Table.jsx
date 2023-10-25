@@ -1,8 +1,13 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import EditDeviceComponent from "./EditDeviceComponent";
+import { GetSingleDevice } from "../redux/slices/DeviceSlice";
 
-const Table = ({ id, type, consumption, name }) => {
+const Table = ({ setDeviceToEdit, setEditdeviceActive }) => {
+  const dispatch = useDispatch();
+
   const { isLoading, devices } = useSelector((state) => state.device);
+
   return (
     <div>
       <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -33,7 +38,7 @@ const Table = ({ id, type, consumption, name }) => {
               </th>
               <th scope="col" class="px-6 py-3">
                 <div class="flex items-center">
-                  Total consumption
+                  Consumption capacity
                   <a href="#">
                     <svg
                       class="w-3 h-3 ml-1.5"
@@ -69,6 +74,13 @@ const Table = ({ id, type, consumption, name }) => {
                     <a
                       href="#"
                       class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                      onClick={() => {
+                        setEditdeviceActive(true);
+                        setDeviceToEdit(device);
+                        (async () => {
+                          await dispatch(GetSingleDevice(device?._id));
+                        })();
+                      }}
                     >
                       Edit
                     </a>
