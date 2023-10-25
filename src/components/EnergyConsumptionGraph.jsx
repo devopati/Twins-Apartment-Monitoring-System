@@ -14,11 +14,11 @@ const EnergyConsumptionGraph = () => {
     series: [
       {
         name: "Regular Energy",
-        data: [3150, 4890, 3545, 5078, 4009, 6000],
+        data: [31, 48, 35, 50, 40, 60],
       },
       {
         name: "Generated Solar Power",
-        data: [1000, 2110, 2500, 1255, 4925, 301],
+        data: [10, 21, 25, 12, 49, 30],
       },
     ],
   });
@@ -28,7 +28,7 @@ const EnergyConsumptionGraph = () => {
         <Chart
           options={graphState.options}
           series={graphState.series}
-          type="area"
+          type="heatmap"
           //   width={500}
           height={320}
         />
