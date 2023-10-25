@@ -13,6 +13,7 @@ import { IoMdAdd, IoMdBulb, IoMdNotifications } from "react-icons/io";
 import { BsThermometerSun } from "react-icons/bs";
 import { MdOutlineWaterDrop } from "react-icons/md";
 import { BiSolidLock } from "react-icons/bi";
+import { RxDashboard } from "react-icons/rx";
 import { HiUserCircle } from "react-icons/hi";
 import { Link, Outlet } from "react-router-dom";
 import "./darshboard.css";
@@ -22,10 +23,15 @@ import NewDeviceSpecs from "../components/NewDeviceSpecs";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { useDispatch, useSelector } from "react-redux";
 import { DevicesToAdd } from "../Data/DevicesToAdd";
-import { GetAllDevices } from "../redux/slices/DeviceSlice";
+import {
+  GetAllDevices,
+  GetSingleDevice,
+  RemoveDevice,
+} from "../redux/slices/DeviceSlice";
 import { GetSpecificIcon } from "../utils/GetSpecificIcon";
 import NoDevices from "../components/NoDevices";
 import ViewDeviceComponent from "../components/ViewDeviceComponent";
+import NotifyHanger from "../components/NotifyHanger";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -35,16 +41,29 @@ const Dashboard = () => {
   const [addDeviceVisible, setAddDeviceVisible] = useState(false);
   const [newDeviceVisible, setNewDeviceVisible] = useState(false);
   const [viewDeviceActive, setViewDeviceActive] = useState(false);
+  const [notifierActive, setNotifierActive] = useState(false);
   const [deviceIdentifier, setDeviceIdentifier] = useState({});
   const [currentDevice, setCurrentDevice] = useState({});
 
-  const { isLoading, devices } = useSelector((state) => state.device);
+  const { isLoading, devices, deviceRemoved, removingDevice } = useSelector(
+    (state) => state.device
+  );
 
   useEffect(() => {
     (async () => {
       await dispatch(GetAllDevices(profileData?._id));
     })();
   }, []);
+
+  useEffect(() => {
+    if (deviceRemoved) {
+      setViewDeviceActive(false);
+      setNotifierActive(false);
+      (async () => {
+        await dispatch(GetAllDevices(profileData?._id));
+      })();
+    }
+  }, [dispatch, deviceRemoved, removingDevice]);
 
   return (
     <div
@@ -59,11 +78,11 @@ const Dashboard = () => {
           </div>
           <div className="flex flex-col gap-10 items-center mt-14">
             <Link
-              to={"consumption"}
+              to={""}
               className="flex flex-col gap-1 justify-center items-center hover:text-slate-400"
             >
-              <VscGraph size={30} className="mt-0 hover:text-slate-400" />
-              <small className="font-bold ">Consumption</small>
+              <RxDashboard size={30} className="mt-0 hover:text-slate-400" />
+              <small className="font-bold ">Dashboard</small>
             </Link>
 
             <Link
@@ -132,14 +151,30 @@ const Dashboard = () => {
           </div>
 
           <div
+            className={`absolute w-max left-1/3 top-2/4 transform -translate-x-1/4 -translate-y-2/4 ${
+              notifierActive ? " z-50" : "z-0"
+            }`}
+          >
+            <NotifyHanger
+              visible={notifierActive}
+              onClosePress={() => setNotifierActive(false)}
+              onRemoveDeviceClick={() =>
+                (async () => await dispatch(RemoveDevice(currentDevice?._id)))()
+              }
+            />
+          </div>
+
+          <div
             className={`absolute w-max left-1/4 top-1/4 transform -translate-x-1/4 -translate-y-1/4 ${
-              viewDeviceActive ? " z-50" : "z-0"
+              viewDeviceActive ? " z-40" : "z-0"
             }`}
           >
             <ViewDeviceComponent
               visible={viewDeviceActive}
               onClosePress={() => setViewDeviceActive(false)}
               currentDevice={currentDevice}
+              Icon={GetSpecificIcon(currentDevice?.identifier?.name)[0]?.icon}
+              onRemoveDeviceClick={() => setNotifierActive(true)}
             />
           </div>
 
@@ -216,6 +251,9 @@ const Dashboard = () => {
                     onViewDeviceClick={() => {
                       setCurrentDevice(item);
                       setViewDeviceActive(true);
+                      (async () => {
+                        await dispatch(GetSingleDevice(item?._id));
+                      })();
                     }}
                   />
                 </div>

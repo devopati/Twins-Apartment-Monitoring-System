@@ -1,10 +1,23 @@
 import React from "react";
-import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineClose, AiOutlinePoweroff } from "react-icons/ai";
 import LoadingSpinner from "./LoadingSpinner";
 import Draggable from "react-draggable";
+import Button from "./Button";
+import { useSelector } from "react-redux";
 
-const ViewDeviceComponent = ({ visible, onClosePress, currentDevice }) => {
+const ViewDeviceComponent = ({
+  visible,
+  onClosePress,
+  currentDevice,
+  onRemoveDeviceClick,
+  Icon,
+}) => {
   const initialPosition = { x: 100, y: 10 };
+
+  const { isLoading, singleDeviceData, removingDevice } = useSelector(
+    (state) => state.device
+  );
+
   return (
     <Draggable position={initialPosition}>
       <div
@@ -26,7 +39,84 @@ const ViewDeviceComponent = ({ visible, onClosePress, currentDevice }) => {
           </small>{" "}
           real time data
         </h1>
-        <LoadingSpinner />
+        {isLoading && <LoadingSpinner />}
+        {!isLoading && (
+          <div
+            className={`rounded-full ${
+              singleDeviceData?.isOn ? "bg-green-400" : "bg-slate-400 "
+            } bg-slate-400 h-10 w-10 flex items-center justify-center self-center`}
+          >
+            <AiOutlinePoweroff className="text-slate-100" size={24} />
+          </div>
+        )}
+
+        {!isLoading && (
+          <div className="flex flex-col gap-7 mt-4">
+            <div className="flex justify-between">
+              <div className="flex flex-col gap-3">
+                <small className="font-semibold text-base text-slate-800">
+                  Device Type:
+                </small>
+                <small className="font-semibold text-base text-slate-500 border-b border-blue-400 px-4 py-1">
+                  {" "}
+                  {singleDeviceData?.identifier?.name}
+                </small>
+              </div>
+
+              <div className="flex flex-col gap-3 w-48">
+                <small className="font-semibold text-base text-slate-800">
+                  Serial Number:
+                </small>
+                <small className="font-semibold text-base text-slate-500 border-b border-blue-400 px-4 py-1">
+                  {singleDeviceData?.serialNo}
+                </small>
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-3 w-44">
+              <small className="font-semibold text-base text-slate-800">
+                Consumption capacity:
+              </small>
+              <small className="font-semibold text-base text-slate-500 border-b border-blue-400 px-4 py-1">
+                {" "}
+                {singleDeviceData?.consumptionCapacity} (W)
+              </small>
+            </div>
+
+            <div className="flex justify-between">
+              <div className="flex flex-col gap-3 w-40">
+                <small className="font-semibold text-base text-slate-800">
+                  Active hours:
+                </small>
+                <small className="font-semibold text-base text-slate-500 border-b border-blue-400 px-4 py-1">
+                  {" "}
+                  {singleDeviceData?.hoursActive
+                    ? singleDeviceData?.hoursActive
+                    : 0}
+                </small>
+              </div>
+
+              <div className="flex flex-col gap-3 w-44">
+                <small className="font-semibold text-base text-slate-800">
+                  Tokens consumed:
+                </small>
+                <small className="font-semibold text-base text-slate-500 border-b border-blue-400 px-4 py-1">
+                  {" "}
+                  {singleDeviceData?.tokensConsumed}
+                </small>
+              </div>
+            </div>
+
+            <div className="self-end mt-6">
+              <button
+                className=" py-1 px-4 rounded-md bg-red-500 text-white font-semibold cursor-pointer hover:bg-red-400 "
+                onClick={onRemoveDeviceClick}
+              >
+                {removingDevice ? "Deleting data..." : "Remove device"}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </Draggable>
   );
