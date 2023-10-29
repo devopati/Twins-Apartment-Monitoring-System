@@ -71,12 +71,12 @@ const Consumption = () => {
         </div>
       </div>
 
-      {/* <div className="mt-16">
+      <div className="mt-16">
         <small className="text-slate-700 font-bold text-2xl">
           Power Consumption (kW)
         </small>
         <EnergyConsumptionGraph />
-      </div> */}
+      </div>
     </div>
   );
 };

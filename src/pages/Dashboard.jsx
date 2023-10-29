@@ -183,7 +183,7 @@ const Dashboard = () => {
       </div>
 
       <div
-        className={` bg-blue-100 col-span-3 p-8 flex flex-col gap-7 border-slate-300 overflow-y-auto `}
+        className={` bg-blue-100 col-span-3 p-8 flex flex-col gap-7 border-slate-300 overflow-y-auto`}
       >
         <div className="flex justify-between items-center">
           <div className="relative">
@@ -241,7 +241,7 @@ const Dashboard = () => {
             </div>
           </div>
           {devices.length > 0 &&
-            !isLoading &&
+            // !isLoading &&
             devices.map((item) => {
               return (
                 <div key={item?._id}>
@@ -259,7 +259,7 @@ const Dashboard = () => {
                 </div>
               );
             })}
-          {isLoading && <LoadingSpinner />}
+          {isLoading && !viewDeviceActive && <LoadingSpinner />}
 
           {devices.length < 1 && !isLoading && (
             <NoDevices

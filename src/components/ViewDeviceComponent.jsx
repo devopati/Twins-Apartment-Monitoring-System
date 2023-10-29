@@ -44,7 +44,7 @@ const ViewDeviceComponent = ({
           <div
             className={`rounded-full ${
               singleDeviceData?.isOn ? "bg-green-400" : "bg-slate-400 "
-            } bg-slate-400 h-10 w-10 flex items-center justify-center self-center`}
+            } h-10 w-10 flex items-center justify-center self-center`}
           >
             <AiOutlinePoweroff className="text-slate-100" size={24} />
           </div>
