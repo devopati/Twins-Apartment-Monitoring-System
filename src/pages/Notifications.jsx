@@ -7,13 +7,13 @@ const Notifications = () => {
       <h1 className="text-slate-400 my-4 border-b w-max border-blue-200">
         Notifications
       </h1>
-      {/* <NotificationContainer />
       <NotificationContainer />
+      {/* <NotificationContainer />
       <NotificationContainer /> */}
 
-      <small className="text-slate-300 my-10 text-center">
+      {/* <small className="text-slate-300 my-10 text-center">
         Notifications will appear here.
-      </small>
+      </small> */}
     </div>
   );
 };
