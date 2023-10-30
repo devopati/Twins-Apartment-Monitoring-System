@@ -21,7 +21,7 @@ const Expenses = () => {
         <h1 className="text-slate-500 text-3xl">
           Ksh.{totalExpense.toFixed(2)}
         </h1>
-        <div className="relative pt-1 px-0">
+        <div className="relative pt-1 px-0 overflow-hidden">
           <ExpensesGraph />
           <div className="absolute h-32 w-32 bg-slate-50 ring-1 ring-slate-300 top-16 left-20 rounded-full flex items-center justify-center shadow-lg">
             <h1 className="text-slate-500 text-xl">Ksh.</h1>

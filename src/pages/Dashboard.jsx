@@ -186,13 +186,13 @@ const Dashboard = () => {
         className={` bg-blue-100 col-span-3 p-8 flex flex-col gap-7 border-slate-300 overflow-y-auto`}
       >
         <div className="flex justify-between items-center">
-          <div className="relative">
+          <Link to={"notifications"} className="relative">
             <IoMdNotifications size={26} className="text-slate-600" />
             <div className=" bg-red-400 h-2 w-2 rounded-full absolute top-0 left-3"></div>
-          </div>
-          <div className="flex gap-2">
+          </Link>
+          <Link to={"myprofile"} className="flex gap-2">
             <HiUserCircle size={42} className="text-slate-600" />
-          </div>
+          </Link>
         </div>
 
         <div className="relative">

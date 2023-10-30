@@ -39,10 +39,12 @@ const Consumption = () => {
           text={"Tokens consumed"}
           text2={
             devices
-              ? devices?.reduce(
-                  (acc, currValue) => acc + currValue.tokensConsumed,
-                  0
-                )
+              ? devices
+                  ?.reduce(
+                    (acc, currValue) => acc + currValue.tokensConsumed,
+                    0
+                  )
+                  .toFixed(2)
               : 0
           }
           Icon={RiTokenSwapFill}
